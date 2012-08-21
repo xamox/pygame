@@ -94,9 +94,9 @@ def add_datafiles(data_files, dest_dir, pattern):
     do_directory(dest_dir, src_dir, elements)
 
 # allow optionally using setuptools for bdist_egg.
-if "-setuptools" in sys.argv:
-    from setuptools import setup, find_packages
-    sys.argv.remove ("-setuptools")
+#hacked this shit for fucking pip virtual install
+from setuptools import setup, find_packages
+
 
 
 # NOTE: the bdist_mpkg_support is for darwin.
