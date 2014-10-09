@@ -519,41 +519,44 @@ class Output(object):
         self._output.WriteSysEx(when, msg)
 
 
-    def note_on(self, note, velocity=None, channel = 0):
+    def note_on(self, note, velocity, channel=0):
         """turns a midi note on.  Note must be off.
-        Output.note_on(note, velocity=None, channel = 0)
+        Output.note_on(note, velocity, channel=0)
+
+        note is an integer from 0 to 127
+        velocity is an integer from 0 to 127
+        channel is an integer from 0 to 15
 
         Turn a note on in the output stream.  The note must already
         be off for this to work correctly.
         """
-        if velocity is None:
-            velocity = 0
-
         if not (0 <= channel <= 15):
             raise ValueError("Channel not between 0 and 15.")
 
-        self.write_short(0x90+channel, note, velocity)
+        self.write_short(0x90 + channel, note, velocity)
 
-    def note_off(self, note, velocity=None, channel = 0):
+    def note_off(self, note, velocity=0, channel=0):
         """turns a midi note off.  Note must be on.
-        Output.note_off(note, velocity=None, channel = 0)
+        Output.note_off(note, velocity=0, channel=0)
+
+        note is an integer from 0 to 127
+        velocity is an integer from 0 to 127 (release velocity)
+        channel is an integer from 0 to 15
 
         Turn a note off in the output stream.  The note must already
         be on for this to work correctly.
         """
-        if velocity is None:
-            velocity = 0
-
         if not (0 <= channel <= 15):
             raise ValueError("Channel not between 0 and 15.")
 
         self.write_short(0x80 + channel, note, velocity)
 
 
-    def set_instrument(self, instrument_id, channel = 0):
-        """select an instrument, with a value between 0 and 127
-        Output.set_instrument(instrument_id, channel = 0)
+    def set_instrument(self, instrument_id, channel=0):
+        """select an instrument for a channel, with a value between 0 and 127
+        Output.set_instrument(instrument_id, channel=0)
 
+        Also called "patch change" or "program change".
         """
         if not (0 <= instrument_id <= 127):
             raise ValueError("Undefined instrument id: %d" % instrument_id)
@@ -561,7 +564,34 @@ class Output(object):
         if not (0 <= channel <= 15):
             raise ValueError("Channel not between 0 and 15.")
 
-        self.write_short(0xc0+channel, instrument_id)
+        self.write_short(0xc0 + channel, instrument_id)
+
+    def pitch_bend(self, value=0, channel=0):
+        """modify the pitch of a channel.
+        Output.pitch_bend(value=0, channel=0)
+
+        Adjust the pitch of a channel.  The value is a signed integer
+        from -8192 to +8191.  For example, 0 means "no change", +4096 is
+        typically a semitone higher, and -8192 is 1 whole tone lower (though
+        the musical range corresponding to the pitch bend range can also be
+        changed in some synthesizers).
+
+        If no value is given, the pitch bend is returned to "no change".
+        """
+        if not (0 <= channel <= 15):
+            raise ValueError("Channel not between 0 and 15.")
+
+        if not (-8192 <= value <= 8191):
+            raise ValueError("Pitch bend value must be between "
+                             "-8192 and +8191, not %d." % value)
+
+        # "The 14 bit value of the pitch bend is defined so that a value of
+        # 0x2000 is the center corresponding to the normal pitch of the note
+        # (no pitch change)." so value=0 should send 0x2000
+        value = value + 0x2000
+        LSB = value & 0x7f  # keep least 7 bits
+        MSB = value >> 7
+        self.write_short(0xe0 + channel, LSB, MSB)
 
 
 
