@@ -111,44 +111,44 @@ __version__ = ver
 
 #next, the "standard" modules
 #we still allow them to be missing for stripped down pygame distributions
-try: import pygame.math
+try: from pygame import math
 except (ImportError,IOError):math=MissingModule("math", geterror(), 1)
 
-try: import pygame.cdrom
+try: from pygame import cdrom
 except (ImportError,IOError):cdrom=MissingModule("cdrom", geterror(), 1)
 
-try: import pygame.cursors
+try: from pygame import cursors
 except (ImportError,IOError):cursors=MissingModule("cursors", geterror(), 1)
 
-try: import pygame.display
+try: from pygame import display
 except (ImportError,IOError):display=MissingModule("display", geterror(), 1)
 
-try: import pygame.draw
+try: from pygame import draw
 except (ImportError,IOError):draw=MissingModule("draw", geterror(), 1)
 
-try: import pygame.event
+try: from pygame import event
 except (ImportError,IOError):event=MissingModule("event", geterror(), 1)
 
-try: import pygame.image
+try: from pygame import image
 except (ImportError,IOError):image=MissingModule("image", geterror(), 1)
 
-try: import pygame.joystick
+try: from pygame import joystick
 except (ImportError,IOError):joystick=MissingModule("joystick", geterror(), 1)
 
-try: import pygame.key
+try: from pygame import key
 except (ImportError,IOError):key=MissingModule("key", geterror(), 1)
 
-try: import pygame.mouse
+try: from pygame import mouse
 except (ImportError,IOError):mouse=MissingModule("mouse", geterror(), 1)
 
-try: import pygame.sprite
+try: from pygame import sprite
 except (ImportError,IOError):sprite=MissingModule("sprite", geterror(), 1)
 
 
-try: import pygame.threads
+try: from pygame import threads
 except (ImportError,IOError):threads=MissingModule("threads", geterror(), 1)
 
-try: import pygame.pixelcopy
+try: from pygame import pixelcopy
 except (ImportError,IOError):pixelcopy=MissingModule("pixelcopy", geterror(), 1)
 
 def warn_unwanted_files():
